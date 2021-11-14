@@ -13,7 +13,6 @@ class TranslatePage extends StatelessWidget {
     return BaseView<TranslatePageViewModel>(
       viewModel: TranslatePageViewModel(),
       onModelReady: (model) {
-        model.setContext(context);
         model.init();
       },
       onPageBuilder: (BuildContext context, TranslatePageViewModel viewModel) =>
@@ -54,7 +53,7 @@ class TranslatePage extends StatelessWidget {
                         const SizedBox(
                           height: 55,
                         ),
-                        Text("data")
+                        buildTranslateText(viewModel)
                       ],
                     ),
                   ),
@@ -65,11 +64,20 @@ class TranslatePage extends StatelessWidget {
     );
   }
 
+  Observer buildTranslateText(TranslatePageViewModel viewModel) {
+    return Observer(builder: (_) {
+      return Text(
+        viewModel.translateWord,
+        style: const TextStyle(fontSize: 22),
+      );
+    });
+  }
+
   NormalButton buildTranslateButton(viewModel) {
     return NormalButton(
-      child: Text("Çevir"),
+      child: const Text("Çevir"),
       onPressed: () {
-        viewModel.translate();
+        viewModel.detectLanguage();
       },
     );
   }

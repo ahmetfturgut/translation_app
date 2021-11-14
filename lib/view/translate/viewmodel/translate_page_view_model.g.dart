@@ -56,12 +56,38 @@ mixin _$TranslatePageViewModel on _TranslatePageViewModelBase, Store {
     });
   }
 
+  final _$translateWordAtom =
+      Atom(name: '_TranslatePageViewModelBase.translateWord');
+
+  @override
+  String get translateWord {
+    _$translateWordAtom.reportRead();
+    return super.translateWord;
+  }
+
+  @override
+  set translateWord(String value) {
+    _$translateWordAtom.reportWrite(value, super.translateWord, () {
+      super.translateWord = value;
+    });
+  }
+
+  final _$detectLanguageAsyncAction =
+      AsyncAction('_TranslatePageViewModelBase.detectLanguage');
+
+  @override
+  Future<dynamic> detectLanguage() {
+    return _$detectLanguageAsyncAction.run(() => super.detectLanguage());
+  }
+
   final _$translateAsyncAction =
       AsyncAction('_TranslatePageViewModelBase.translate');
 
   @override
-  Future<dynamic> translate() {
-    return _$translateAsyncAction.run(() => super.translate());
+  Future<dynamic> translate(
+      String word, String fromLanguageCode, String toLanguageCode) {
+    return _$translateAsyncAction
+        .run(() => super.translate(word, fromLanguageCode, toLanguageCode));
   }
 
   final _$_TranslatePageViewModelBaseActionController =
@@ -94,7 +120,8 @@ mixin _$TranslatePageViewModel on _TranslatePageViewModelBase, Store {
     return '''
 langs: ${langs},
 selectedLang: ${selectedLang},
-convertedLang: ${convertedLang}
+convertedLang: ${convertedLang},
+translateWord: ${translateWord}
     ''';
   }
 }

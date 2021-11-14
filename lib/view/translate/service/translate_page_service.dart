@@ -2,8 +2,9 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:translation_app/core/constants/app/app_constants.dart';
+import 'package:translator/translator.dart';
 
-class LoginService {
+class TranslateSErvice {
   static Future<String> detectLanguage(String message) async {
     final apiKey = ApplicationConstants.LANG_DETECT_API_KEY;
     final response = await http.post(
@@ -22,5 +23,16 @@ class LoginService {
     } else {
       throw Exception();
     }
+  }
+
+  static Future<String> translate(
+      String message, String fromLanguageCode, String toLanguageCode) async {
+    final translation = await GoogleTranslator().translate(
+      message,
+      from: fromLanguageCode,
+      to: toLanguageCode,
+    );
+
+    return translation.text;
   }
 }
