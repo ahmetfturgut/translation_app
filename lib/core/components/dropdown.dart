@@ -1,33 +1,27 @@
-// import 'package:flutter/material.dart';
-// import 'package:translation_app/core/init/translation.dart';
+import 'package:flutter/material.dart';
+import 'package:translation_app/core/init/translation.dart';
 
-// class DropDownWidget extends StatelessWidget {
-//   final String value;
-//   final VoidCallback? onChangedLanguage;
+class DropDownWidget extends StatelessWidget {
+  final String value;
+  final onChangedLanguage;
 
-//   const DropDownWidget({
-//     required this.value,
-//     this.onChangedLanguage,
-//     Key? key,
-//   }) : super(key: key);
+  const DropDownWidget({
+    required this.value,
+    this.onChangedLanguage,
+    Key? key,
+  }) : super(key: key);
 
-//   @override
-//   Widget build(BuildContext context) {
-//     final items = Translations.languages
-//         .map<DropdownMenuItem<String>>(
-//             (String value) => DropdownMenuItem<String>(
-//                   value: value,
-//                   child: Text(value),
-//                 ))
-//         .toList();
-
-//     return DropdownButton<String>(
-//       value: value,
-//       icon: Icon(Icons.expand_more, color: Colors.grey),
-//       iconSize: 24,
-//       elevation: 16,
-//       style: TextStyle(color: Colors.black),
-//       items: items,
-//     );
-//   }
-// }
+  @override
+  Widget build(BuildContext context) {
+    return DropdownButton<String>(
+      value: value,
+      items: Translations.languages.map((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value),
+        );
+      }).toList(),
+      onChanged: onChangedLanguage,
+    );
+  }
+}

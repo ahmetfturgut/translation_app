@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:translation_app/core/base/view/base_widget.dart';
 import 'package:translation_app/core/components/button.dart';
+import 'package:translation_app/core/components/dropdown.dart';
 
 import 'package:translation_app/view/translate/viewmodel/translate_page_view_model.dart';
 
@@ -19,56 +20,54 @@ class TranslatePage extends StatelessWidget {
           Scaffold(
         body: Form(
           autovalidateMode: AutovalidateMode.always,
-          child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: Center(
-                child: Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(22),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            buildSelectedLanguage(viewModel),
-                            const SizedBox(
-                              width: 80,
-                              child: Icon(Icons.translate),
-                            ),
-                            buildConvertedLanguage(viewModel),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: buildTextForm(viewModel),
-                            ),
-                            const SizedBox(
-                              width: 40,
-                            ),
-                            buildTranslateButton(viewModel)
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 55,
-                        ),
-                        buildTranslateText(viewModel)
-                      ],
-                    ),
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(30.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      buildSelectedLanguage(viewModel),
+                      const SizedBox(
+                        width: 80,
+                        child: Icon(Icons.translate),
+                      ),
+                      buildConvertedLanguage(viewModel),
+                    ],
                   ),
-                ),
-              )),
+                  buildTextForm(viewModel),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  buildTranslateButton(viewModel),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  buildTranslateText(context, viewModel)
+                ],
+              ),
+            ),
+          ),
         ),
       ),
     );
   }
 
-  Observer buildTranslateText(TranslatePageViewModel viewModel) {
+  Observer buildTranslateText(context, TranslatePageViewModel viewModel) {
     return Observer(builder: (_) {
-      return Text(
-        viewModel.translateWord,
-        style: const TextStyle(fontSize: 22),
+      return Card(
+        color: Colors.grey[200],
+        child: Padding(
+          padding: const EdgeInsets.all(44.0),
+          child: Center(
+            child: Text(
+              viewModel.translateWord,
+              style: const TextStyle(fontSize: 22),
+            ),
+          ),
+        ),
       );
     });
   }
@@ -82,40 +81,31 @@ class TranslatePage extends StatelessWidget {
     );
   }
 
-  Form buildTextForm(viewModel) {
-    return Form(
-      key: viewModel.formState,
-      child: TextFormField(
-          controller: viewModel.translateTextController,
-          decoration: const InputDecoration(
-            hintText: "Metin Girmek için Dokunun",
-            fillColor: Colors.white,
-            enabledBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: Colors.black),
-            ),
-            focusedBorder: UnderlineInputBorder(
-              borderSide: BorderSide(color: Colors.black),
-            ),
-            contentPadding: EdgeInsets.only(top: 15),
-          )),
+  Card buildTextForm(viewModel) {
+    return Card(
+      child: Form(
+        key: viewModel.formState,
+        child: TextFormField(
+            textAlign: TextAlign.center,
+            maxLines: 5,
+            controller: viewModel.translateTextController,
+            decoration: const InputDecoration(
+              hintText: "Metin Girmek için Dokunun",
+              fillColor: Colors.white,
+              border: InputBorder.none,
+            )),
+      ),
     );
   }
 
   Expanded buildConvertedLanguage(TranslatePageViewModel viewModel) {
     return Expanded(
       child: Observer(builder: (_) {
-        return DropdownButton<String>(
-          value: viewModel.convertedLang,
-          items: viewModel.langs.map((String value) {
-            return DropdownMenuItem<String>(
-              value: value,
-              child: Text(value),
-            );
-          }).toList(),
-          onChanged: (select) {
-            viewModel.convertedLangChange(select);
-          },
-        );
+        return DropDownWidget(
+            value: viewModel.convertedLang,
+            onChangedLanguage: (select) {
+              viewModel.convertedLangChange(select);
+            });
       }),
     );
   }
@@ -123,18 +113,11 @@ class TranslatePage extends StatelessWidget {
   Expanded buildSelectedLanguage(TranslatePageViewModel viewModel) {
     return Expanded(
       child: Observer(builder: (_) {
-        return DropdownButton<String>(
-          value: viewModel.selectedLang,
-          items: viewModel.langs.map((String value) {
-            return DropdownMenuItem<String>(
-              value: value,
-              child: Text(value),
-            );
-          }).toList(),
-          onChanged: (select) {
-            viewModel.selectedLangChange(select);
-          },
-        );
+        return DropDownWidget(
+            value: viewModel.selectedLang,
+            onChangedLanguage: (select) {
+              viewModel.selectedLangChange(select);
+            });
       }),
     );
   }
